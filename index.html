@@ -252,13 +252,17 @@
       font-size: 13px;
       opacity:.9;
     }
-    @keyframes heartbeat {
-  0%   { transform: scale(1); }
-  15%  { transform: scale(1.15); }
-  30%  { transform: scale(1); }
-  45%  { transform: scale(1.12); }
-  60%  { transform: scale(1); }
-  100% { transform: scale(1); }
+ @keyframes heartbeat {
+  0%   { transform: scale(var(--base-scale)); }
+  15%  { transform: scale(calc(var(--base-scale) * 1.12)); }
+  30%  { transform: scale(var(--base-scale)); }
+  45%  { transform: scale(calc(var(--base-scale) * 1.08)); }
+  60%  { transform: scale(var(--base-scale)); }
+  100% { transform: scale(var(--base-scale)); }
+}
+
+.heart-pulse {
+  animation: heartbeat 1.2s infinite;
 }
 
 .heart-pulse {
@@ -439,7 +443,8 @@
     noCountEl.textContent = noCount;
 
     yesScale = Math.min(YES_MAX, yesScale + YES_STEP);
-    yes.style.transform = `scale(${yesScale})`;
+    yes.style.setProperty('--base-scale', yesScale);
+yes.style.transform = `scale(${yesScale})`;
 
     const chance = 100 + noCount*69;
     chanceEl.textContent = chance + "%";
