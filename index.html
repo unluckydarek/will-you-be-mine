@@ -352,19 +352,36 @@
 
   function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
 
-  function moveNoRandom(){
-    const rect = arena.getBoundingClientRect();
-    const btn = no.getBoundingClientRect();
-    const pad = 8;
-    const maxX = rect.width - btn.width - pad;
-    const maxY = rect.height - btn.height - pad;
+  function moveNoRandom(e){
+  const rect = arena.getBoundingClientRect();
+  const btnW = no.offsetWidth;
+  const btnH = no.offsetHeight;
 
-    const x = clamp(Math.random()*maxX, pad, maxX);
-    const y = clamp(Math.random()*maxY, pad, maxY);
+  const pad = 10;
 
-    no.style.left = x + "px";
-    no.style.top  = y + "px";
-  }
+  // pozycja kursora w obrębie areny
+  const mx = e ? (e.clientX - rect.left) : rect.width / 2;
+  const my = e ? (e.clientY - rect.top)  : rect.height / 2;
+
+  const maxX = rect.width  - btnW - pad;
+  const maxY = rect.height - btnH - pad;
+
+  // minimalny dystans od kursora (żeby nie pojawiał się pod myszą)
+  const minDist = 140; // zwiększ jeśli dalej “wpada pod kursor”
+
+  let x, y, tries = 0;
+
+  do {
+    x = pad + Math.random() * (maxX - pad);
+    y = pad + Math.random() * (maxY - pad);
+    tries++;
+    // zabezpieczenie aby nie zapętlić się w małych ekranach
+    if (tries > 30) break;
+  } while (Math.hypot(x - mx, y - my) < minDist);
+
+  no.style.left = x + "px";
+  no.style.top  = y + "px";
+}
 
   // Ustaw początkowo „NIE” w obrębie areny
   function placeNoStart(){
@@ -376,7 +393,13 @@
   placeNoStart();
 
   // Uciekanie na hover (bardziej “premium” niż click)
-  no.addEventListener('mouseenter', () => {
+ let noCooldown = false;
+
+no.addEventListener('pointerenter', (e) => {
+  if (noCooldown) return;
+  noCooldown = true;
+  setTimeout(() => noCooldown = false, 420); // tu możesz dać 300–600 ms
+  
     noCount++;
     noCountEl.textContent = noCount;
 
@@ -395,7 +418,7 @@
     status.textContent = `Wykryto próbę „NIE” (${noCount}). System rekomenduje „TAK”.`;
 
     beep(220 + noCount*20, 0.06, 'square', 0.03);
-    moveNoRandom();
+    moveNoRandom(e);
 
     // Po kilku razach “NIE” zaczyna tracić sens
     if(noCount >= 8){
