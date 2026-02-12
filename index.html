@@ -144,6 +144,11 @@
     }
     .btn-no:hover{transform: translateY(-1px)}
 
+    .btn-yes { transform: scale(1); transform-origin: left center; }
+    .btn-no  { transform: scale(1); transform-origin: center; }
+
+    #arena { overflow: hidden; }
+    
     .panel{
       display:flex;
       flex-direction:column;
@@ -335,6 +340,9 @@
   let noCount = 0;
   let yesScale = 1.0;
   let noScale = 1.0;
+  const YES_MAX = 1.4;     // maksymalna skala TAK
+  const YES_STEP = 0.055;  // ile rośnie za każdym razem
+  const NO_MIN  = 0.45;    // minimalna skala NIE
 
   const taunts = [
     "Serio chcesz kliknąć „NIE”? 👀",
@@ -392,6 +400,10 @@
   window.addEventListener('resize', placeNoStart);
   placeNoStart();
 
+// Startowe skale, żeby nie było „skoku” na pierwszym hover
+yes.style.transform = "scale(1)";
+no.style.transform  = "scale(1)";
+
   // Uciekanie na hover (bardziej “premium” niż click)
  let noCooldown = false;
 
@@ -403,12 +415,14 @@ no.addEventListener('pointerenter', (e) => {
     noCount++;
     noCountEl.textContent = noCount;
 
-    // „Tak” rośnie, „Nie” maleje
-    yesScale += 0.08;
-    noScale  -= 0.06;
+  // „Tak” rośnie, „Nie” maleje (z limitem i łagodnym startem)
+yesScale = Math.min(YES_MAX, yesScale + YES_STEP);
 
-    yes.style.transform = `scale(${yesScale})`;
-    no.style.transform  = `scale(${Math.max(0.35, noScale)})`;
+const NO_STEP = (noCount < 3) ? 0.03 : 0.06; // wolniej na początku
+noScale = Math.max(NO_MIN, noScale - NO_STEP);
+
+yes.style.transform = `scale(${yesScale})`;
+no.style.transform  = `scale(${noScale})`;
 
     // “szansa”
     const chance = clamp(60 + noCount*8, 0, 100);
@@ -434,12 +448,12 @@ no.addEventListener('pointerenter', (e) => {
   });
 
   // Kliknięcie “NIE” — też niech coś robi
-  no.addEventListener('click', (e) => {
-    e.preventDefault();
-    showToast("Nice try 😌");
-    moveNoRandom();
-    beep(160,0.07,'square',0.03);
-  });
+no.addEventListener('click', (e) => {
+  e.preventDefault();
+  showToast("Nice try 😌");
+  moveNoRandom(e);
+  beep(160,0.07,'square',0.03);
+});
 
   // ======= Serduszka w tle (canvas) =======
   const heartsCanvas = document.getElementById('hearts');
