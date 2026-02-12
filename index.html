@@ -429,7 +429,7 @@
     yesScale = Math.min(YES_MAX, yesScale + YES_STEP);
     yes.style.transform = `scale(${yesScale})`;
 
-    const chance = clamp(60 + noCount*8, 0, 100);
+    const chance = 100 + noCount*7;
     chanceEl.textContent = chance + "%";
 
     showToast(taunts[noCount % taunts.length]);
