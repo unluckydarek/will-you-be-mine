@@ -421,7 +421,7 @@
   no.addEventListener('pointerenter', (e) => {
     if (noCooldown) return;
     noCooldown = true;
-    setTimeout(() => noCooldown = false, 250);
+    setTimeout(() => noCooldown = false, 150);
 
     noCount++;
     noCountEl.textContent = noCount;
