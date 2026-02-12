@@ -343,11 +343,14 @@
   const YES_STEP = 0.12;
 
   const taunts = [
-    "Serio chcesz kliknąć „NIE”? 👀",
-    "Przycisk „NIE” zgłasza sprzeciw proceduralny.",
-    "System miłości wykrył wahanie.",
-    "To już wygląda podejrzanie romantycznie…",
-    "Uwaga: „NIE” traci prawa obywatelskie."
+    "Jula… jesteś pewna? 🥺",
+    "Ten przycisk wygląda, jakby nie chciał być kliknięty 😿",
+    "Darek właśnie patrzy z nadzieją 😏",
+    "Serio próbujesz? Ten przycisk się stresuje 😭",
+    "NIE udaje odważne, ale w środku panikuje 🙈",
+    "To chyba nie ta opcja, co? 😼",
+    "Przycisk NIE właśnie zaczął się rumienić 😳",
+    "Darek udaje spokój, ale to trudne 😅"
   ];
 
  let toastTimer = null;
@@ -434,7 +437,7 @@ function showToast(msg){
 
     // płynne znikanie NIE (bez dziwnych skoków)
     if (noCount === 6) {
-      no.textContent = "NIE...? 🤏";
+      no.textContent = "NIE...? 😏";
     }
     if (noCount >= 8)  no.style.opacity = "0.6";
     if (noCount >= 10) no.style.opacity = "0.3";
