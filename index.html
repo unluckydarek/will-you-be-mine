@@ -213,6 +213,7 @@
       border:1px solid rgba(255,255,255,.85);
       box-shadow: var(--shadow);
       padding: 28px;
+      
     }
     .final h2{
       margin:0 0 10px;
@@ -229,6 +230,19 @@
       opacity:.7;
       margin-top: 10px;
     }
+    .final { opacity: 0; transition: opacity .45s ease; }
+.final.show { opacity: 1; }
+
+.final .box{
+  transform: translateY(16px) scale(.96);
+  opacity: 0;
+  transition: transform .55s cubic-bezier(.2,1,.2,1), opacity .55s ease;
+  box-shadow: 0 30px 90px rgba(255,61,110,.22);
+}
+.final.show .box{
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
 
     .mutebtn{
       border:0;
@@ -314,10 +328,12 @@
     o.stop(audioCtx.currentTime + dur);
   }
   function chime(){
-    beep(740,0.07,'sine',0.055);
-    setTimeout(()=>beep(880,0.08,'sine',0.055), 80);
-    setTimeout(()=>beep(990,0.10,'sine',0.055), 160);
-  }
+  beep(740,0.08,'sine',0.055);
+  setTimeout(()=>beep(880,0.09,'sine',0.055), 90);
+  setTimeout(()=>beep(990,0.12,'sine',0.055), 190);
+  setTimeout(()=>beep(1180,0.12,'triangle',0.05), 340);
+  setTimeout(()=>beep(1320,0.14,'triangle',0.045), 520);
+}
 
   const muteBtn = document.getElementById('mute');
   muteBtn.addEventListener('click', () => {
@@ -479,7 +495,21 @@ function showToast(msg){
   resizeCanvas(heartsCanvas);
   window.addEventListener('resize', () => resizeCanvas(heartsCanvas));
 
-  function spawnHeart(x=null, y=null){
+  function spawnHeart(x=null, y=null)
+  function heartBurst(amount = 34)
+  setTimeout(() => heartBurst(26), 250);
+  setTimeout(() => heartBurst(20), 520);
+  {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  for(let i=0;i<amount;i++){
+    spawnHeart(
+      W/2 + (Math.random()-0.5)*260,
+      H/2 + (Math.random()-0.5)*120
+    );
+  }
+}
+  {
     const W = window.innerWidth;
     const H = window.innerHeight;
     hearts.push({
@@ -536,22 +566,22 @@ function showToast(msg){
   window.addEventListener('resize', () => resizeCanvas(confCanvas));
 
   let conf = [];
-  function burstConfetti(){
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    for(let i=0;i<180;i++){
-      conf.push({
-        x: W/2 + (Math.random()-0.5)*120,
-        y: H/2 + (Math.random()-0.5)*40,
-        vx: (Math.random()-0.5)*9,
-        vy: (Math.random()-0.8)*10,
-        g: 0.12 + Math.random()*0.12,
-        r: 2 + Math.random()*4,
-        a: 1,
-        rot: Math.random()*Math.PI
-      });
-    }
+  function burstConfetti(amount = 320, power = 11){
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  for(let i=0;i<amount;i++){
+    conf.push({
+      x: W/2 + (Math.random()-0.5)*160,
+      y: H/2 + (Math.random()-0.5)*60,
+      vx: (Math.random()-0.5)*power,
+      vy: (Math.random()-0.9)*power,
+      g: 0.10 + Math.random()*0.10,
+      r: 2 + Math.random()*5,
+      a: 1,
+      rot: Math.random()*Math.PI
+    });
   }
+}
 
   function confLoop(){
     cctx.clearRect(0,0,window.innerWidth, window.innerHeight);
@@ -587,13 +617,16 @@ function showToast(msg){
     }catch{}
 
     chime();
-    burstConfetti();
+    burstConfetti(320, 12);
+    setTimeout(() => burstConfetti(220, 10), 220);
+    setTimeout(() => burstConfetti(160, 9), 520);
     showToast("💘 Zatwierdzono!");
     status.textContent = "TAK zostało przyjęte. Uruchamiam tryb Walentynkowy...";
 
     setTimeout(() => {
       final.style.display = "grid";
-    }, 700);
+      requestAnimationFrame(() => final.classList.add("show"));
+    }, 1500);
   });
 
 })();
