@@ -251,7 +251,6 @@
 
   <div class="wrap">
     <div class="card">
-      <div class="badge"><span class="dot"></span><span>Tryb premium: serce + chaos kontrolowany</span></div>
       <h1 class="title">Czy zostaniesz moją Walentynką? 💘</h1>
       <p class="subtitle">Uwaga: przycisk „NIE” posiada własny instynkt samozachowawczy.</p>
 
@@ -277,10 +276,10 @@
         Tip: „NIE” reaguje na zbliżenie kursora. To nie przypadek. To przeznaczenie.
       </p>
 
-      <button class="mutebtn" id="mute">🔊 Dźwięk: ON</button>
+     <button class="mutebtn" id="mute">🔇 Dźwięk: OFF</button>
 
       <p class="tip" style="opacity:.7;margin-top:auto;">
-        PS: Jeśli chcesz, mogę dopisać imię w pytaniu i drugi ekran z Waszym zdjęciem w tle.
+      
       </p>
     </div>
   </div>
@@ -300,7 +299,7 @@
 <script>
 (() => {
   // ======= Audio (bez plików, prosty “chime”) =======
-  let audioEnabled = true;
+  let audioEnabled = false;
   let audioCtx = null;
   function beep(freq=660, dur=0.08, type='sine', gain=0.06){
     if(!audioEnabled) return;
